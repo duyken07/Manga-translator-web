@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "id": "assistant",
+  "name": "Trợ lý dịch truyện",
+  "display_name": "",
+  "description": "Hỏi cách dùng app, trang đang xem, tác phẩm, ngữ pháp",
+  "avatar": "",
+  "enabled": true,
+  "is_default": false,
+  "mode": "assistant",
+  "persona": "",
+  "speech_style": "",
+  "style_examples": [],
+  "scenario": "",
+  "knowledge_boundary": "",
+  "system_prompt": "",
+  "greeting": "",
+  "starters": [],
+  "model": {
+    "provider": "gemini",
+    "model_name": ""
+  }
+}

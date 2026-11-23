@@ -1,0 +1,18 @@
+type_layer_template.bin
+-----------------------
+Khối dữ liệu "TySh" (Type Tool Object Setting) của một lớp chữ do Photoshop tạo, trích từ tệp thử nghiệm
+tests/psd_files/text.psd của dự án psd-tools (https://github.com/psd-tools/psd-tools, giấy phép MIT).
+Dùng làm khuôn: app/services/psd_text.py chỉ thay các trường cần thiết (nội dung, font, cỡ chữ, giãn dòng, màu, căn lề,
+vị trí) và giữ nguyên phần còn lại để cấu trúc luôn đúng như Photoshop ghi.
+
+MIT License - Copyright (c) psd-tools contributors.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the following conditions:
+the above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
+type_layer_template_box.bin
+---------------------------
+Bản dẫn xuất của type_layer_template.bin cho chữ KHỐI (paragraph / box text, có khung bao chữ như khi kéo khung bằng công cụ Type):
+trong EngineData, Rendered.Shapes...ShapeType = 1, PointBase được thay bằng BoxBounds. Cùng giấy phép MIT (xem trên).
