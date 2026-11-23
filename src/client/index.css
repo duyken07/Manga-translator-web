@@ -1,0 +1,51 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --background: 240 5% 96%;
+    --foreground: 240 10% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 8%;
+    --muted: 240 5% 92%;
+    --muted-foreground: 240 4% 42%;
+    --border: 240 6% 86%;
+    --accent-brand: 229 73% 54%;
+    --accent-brand-fg: 0 0% 100%;
+    --radius: 0.625rem;
+    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  .dark {
+    --background: 240 10% 5%;
+    --foreground: 240 5% 94%;
+    --card: 240 8% 9%;
+    --card-foreground: 240 5% 94%;
+    --muted: 240 6% 14%;
+    --muted-foreground: 240 5% 60%;
+    --border: 240 6% 18%;
+    --accent-brand: 229 90% 68%;
+    --accent-brand-fg: 240 10% 6%;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  .font-mono, .tabular-nums {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

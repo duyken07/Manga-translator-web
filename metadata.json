@@ -1,0 +1,8 @@
+{
+  "name": "Manga Translator Web",
+  "description": "Full-stack manga translation and image editing platform with React, Konva.js, Node.js API proxy, Gemini Vision translation, and Cloud Run FastAPI backend integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

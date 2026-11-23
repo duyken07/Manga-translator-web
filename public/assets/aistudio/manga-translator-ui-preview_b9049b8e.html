@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manga Translator – bản xem thử giao diện</title>
+<style>
+:root{--bg:#eceef2;--pn:#fff;--pn2:#f3f4f7;--tx:#16181d;--mu:#6a707d;--bd:#d6d9e0;--ac:#3b5bdb;--acx:#fff;--hl:#f2b705;--rd:#d6336c;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1014;--pn:#181b22;--pn2:#20242d;--tx:#eceef3;--mu:#98a0af;--bd:#2c313c;--ac:#6c8cff;--acx:#0b1020;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1014;--pn:#181b22;--pn2:#20242d;--tx:#eceef3;--mu:#98a0af;--bd:#2c313c;--ac:#6c8cff;--acx:#0b1020;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#app{height:100%;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--pn);border-bottom:1px solid var(--bd)}
+header h1{font-size:16px;margin:0;flex:1;font-weight:650;letter-spacing:.2px}
+.tag{font-size:11px;color:var(--mu);border:1px solid var(--bd);border-radius:99px;padding:2px 8px}
+main{flex:1;min-height:0;position:relative}
+section{position:absolute;inset:0;display:none;flex-direction:column}
+section.on{display:flex}
+nav{display:flex;background:var(--pn);border-top:1px solid var(--bd)}
+nav button{flex:1;background:none;border:0;color:var(--mu);padding:10px 4px 9px;font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button svg{width:22px;height:22px}
+nav button.on{color:var(--ac);font-weight:650}
+button,select,textarea{font:inherit;color:var(--tx)}
+.btn{background:var(--pn2);border:1px solid var(--bd);border-radius:10px;padding:9px 14px;min-height:40px}
+.btn.pri{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:650}
+.btn.sm{padding:5px 10px;min-height:32px;font-size:13px}
+.scroll{overflow:auto;padding:14px;flex:1}
+.drop{border:2px dashed var(--bd);border-radius:14px;padding:22px 14px;text-align:center;background:var(--pn)}
+.drop b{display:block;font-size:16px;margin-bottom:4px}
+.drop p{margin:0 0 12px;color:var(--mu);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.lbl{font-size:12px;color:var(--mu);margin:14px 0 5px}
+select{width:100%;background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:10px}
+.pg{display:flex;align-items:center;gap:10px;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:8px;margin-top:8px}
+.pg img{width:44px;height:58px;object-fit:cover;border-radius:6px;background:var(--pn2)}
+.pg .n{flex:1;min-width:0}.pg .n div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pg small{color:var(--mu)}
+.st{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--bd);color:var(--mu)}
+.st.done{color:var(--ac);border-color:var(--ac)}
+.bar{height:6px;background:var(--pn2);border-radius:9px;overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}
+/* workspace */
+#strip{display:flex;gap:6px;padding:6px 8px;overflow-x:auto;background:var(--pn);border-bottom:1px solid var(--bd)}
+#strip img{height:54px;width:40px;object-fit:cover;border-radius:5px;border:2px solid transparent;opacity:.7;flex:none}
+#strip img.on{border-color:var(--ac);opacity:1}
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;background:var(--bg);touch-action:none;cursor:grab}
+#wrap{position:absolute;left:0;top:0;transform-origin:0 0}
+#wrap img{display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+#wrap svg{position:absolute;left:0;top:0}
+.bx{fill:rgba(108,140,255,.12);stroke:var(--ac);stroke-width:2;vector-effect:non-scaling-stroke;cursor:pointer}
+.bx.ed{stroke:var(--hl);fill:rgba(242,183,5,.14)}
+.bx.sel{stroke-width:3.5;fill:rgba(108,140,255,.28)}
+.bx.ed.sel{fill:rgba(242,183,5,.32)}
+.tr{fill:#fff;stroke:#222;stroke-width:1;vector-effect:non-scaling-stroke}
+.tx{pointer-events:none;color:#111;font-family:system-ui,sans-serif;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;overflow:hidden;word-break:break-word}
+#tools{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px}
+#tools button{width:42px;height:42px;border-radius:12px;border:1px solid var(--bd);background:var(--pn);display:grid;place-items:center;opacity:.95}
+#tools button.on{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+#tools svg{width:20px;height:20px}
+#zoom{position:absolute;left:8px;top:8px;font-size:12px;background:var(--pn);border:1px solid var(--bd);border-radius:99px;padding:3px 10px;color:var(--mu)}
+#sheet{background:var(--pn);border-top:1px solid var(--bd);border-radius:16px 16px 0 0;display:flex;flex-direction:column;height:44%;transition:height .2s;box-shadow:0 -6px 20px rgba(0,0,0,.18)}
+#sheet.min{height:50px}
+#sh{display:flex;align-items:center;gap:8px;padding:6px 12px;min-height:50px}
+#sh .grip{width:36px;height:4px;border-radius:9px;background:var(--bd);position:absolute;left:50%;margin-left:-18px;margin-top:-38px}
+#sh b{flex:1}
+#list{overflow:auto;padding:0 10px 12px;flex:1}
+.dl{border:1px solid var(--bd);border-radius:12px;padding:9px;margin-bottom:8px;background:var(--pn2)}
+.dl.sel{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.dl.ed{border-left:4px solid var(--hl)}
+.dl.hid{opacity:.5}
+.dh{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:12px;color:var(--mu)}
+.dh .id{font-weight:700;color:var(--tx)}.dh .sp{flex:1}
+.ic{background:none;border:1px solid var(--bd);border-radius:8px;width:32px;height:32px;display:grid;place-items:center;padding:0}
+.ic svg{width:16px;height:16px}
+.og{font-size:13px;color:var(--mu);margin-bottom:5px}
+.og i{display:block;font-style:normal;opacity:.8;font-size:12px}
+textarea{width:100%;background:var(--pn);border:1px solid var(--bd);border-radius:9px;padding:8px;resize:none;min-height:42px;font-size:15px}
+.empty{text-align:center;color:var(--mu);padding:40px 20px}
+.empty b{display:block;color:var(--tx);font-size:16px;margin-bottom:6px}
+#toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 14px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;max-width:90%}
+#toast.on{opacity:1}
+.note{font-size:13px;color:var(--mu);background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-top:10px}
+.seg{display:flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.seg button{flex:1;background:var(--pn);border:0;padding:10px}
+.seg button.on{background:var(--ac);color:var(--acx);font-weight:650}
+@media(min-width:820px){#app{max-width:1100px;margin:0 auto;border-inline:1px solid var(--bd)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><h1>Manga Translator</h1><span class="tag">Bản xem thử · dữ liệu mẫu</span></header>
+<main>
+<section id="t-up"><div class="scroll">
+ <div class="drop"><b>Thêm trang truyện</b><p>Chọn nhiều ảnh PNG, JPG, WEBP hoặc BMP. Trang tự xếp theo số thứ tự tên file.</p>
+ <div class="row" style="justify-content:center"><button class="btn pri" id="pick">Chọn ảnh</button><button class="btn" id="demo">Dùng trang mẫu</button></div>
+ <input id="file" type="file" accept="image/png,image/jpeg,image/webp,image/bmp" multiple hidden></div>
+ <div class="lbl">Ngôn ngữ gốc</div><select id="lang"><option>Tiếng Nhật</option><option>Tiếng Hàn</option><option>Tiếng Trung</option><option>Tiếng Anh</option></select>
+ <div class="lbl">Chế độ dịch</div><select id="mode"><option value="a">A · YOLO + Manga-OCR + Gemini</option><option value="b">B · YOLO + Gemini Vision</option></select>
+ <div id="pl"></div>
+ <div class="bar" id="bar" hidden><i></i></div>
+ <button class="btn pri" id="go" style="width:100%;margin-top:14px">Bắt đầu dịch</button>
+</div></section>
+<section id="t-ws"><div id="wsb" style="display:flex;flex-direction:column;flex:1;min-height:0"></div></section>
+<section id="t-set"><div class="scroll">
+ <div class="lbl" style="margin-top:0">Giao diện</div>
+ <div class="seg" id="theme"><button data-t="system">Theo máy</button><button data-t="light">Sáng</button><button data-t="dark">Tối</button></div>
+ <div class="lbl">Gemini API key</div><input id="key" type="password" placeholder="Dán key tại đây" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--pn);color:var(--tx)">
+ <div class="note">Đây là bản xem thử giao diện: <b>chưa dịch thật</b>. Nút “Bắt đầu dịch” chỉ tạo khung thoại mẫu để bạn thử thao tác. Key không được lưu và không gửi đi đâu. Khi nối với backend thật, key sẽ được mã hóa trên server.</div>
+ <div class="note"><b>Mẹo thao tác</b><br>Một ngón: kéo ảnh. Hai ngón: phóng to/thu nhỏ. Chạm khung để chọn, rồi kéo khung hoặc kéo chấm ở góc để đổi cỡ.</div>
+</div></section>
+</main>
+<nav id="nav">
+<button data-t="up" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>Tải lên</button>
+<button data-t="ws"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M3 12h5"/></svg>Chỉnh sửa</button>
+<button data-t="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 00-2-1.2L14 3h-4l-.6 2.6a7 7 0 00-2 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 000 2.4l-2 1.5 2 3.4 2.3-.9a7 7 0 002 1.2L10 21h4l.6-2.6a7 7 0 002-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>Cài đặt</button>
+</nav>
+</div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const S={tab:'up',pages:[],cur:0,sel:null,showTr:true,sheetMin:false,v:{s:1,x:0,y:0},nid:1,theme:'system'};
+const IC={fit:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',one:'<path d="M9 7l-3 3v7M14 7h3v10"/><path d="M5 20h14"/>',tr:'<path d="M4 5h9M8.5 5v2c0 3-2 6-5 7M6 10c1 2 3 4 6 5M13 20l4-9 4 9M14.5 17h5"/>',add:'<path d="M12 5v14M5 12h14"/>',up:'<path d="M6 15l6-6 6 6"/>',dn:'<path d="M6 9l6 6 6-6"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',del:'<path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'};
+const svg=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cur=()=>S.pages[S.cur];
+/* ---------- dữ liệu mẫu ---------- */
+const SAMPLE=[['こんにちは！','konnichiwa','Xin chào!'],['今日はいい天気ですね。','kyō wa ii tenki desu ne.','Hôm nay trời đẹp nhỉ.'],['行こう！','ikō!','Đi thôi!'],['ありがとう。','arigatō.','Cảm ơn nhé.']];
+function demoImg(n){const c=document.createElement('canvas');c.width=640;c.height=900;const g=c.getContext('2d');g.fillStyle='#f6f6f4';g.fillRect(0,0,640,900);g.strokeStyle='#111';g.lineWidth=4;
+ [[20,20,600,270],[20,310,290,300],[330,310,290,300],[20,630,600,250]].forEach(([x,y,w,h],i)=>{g.fillStyle=['#dfe6f2','#efe4d6','#dbe9de','#e9dcec'][(i+n)%4];g.fillRect(x,y,w,h);g.strokeRect(x,y,w,h)});
+ const B=[[70,50,230,110,0],[360,150,220,100,1],[50,350,200,110,2],[370,650,210,110,3]];g.font='600 22px system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';
+ B.forEach(([x,y,w,h,k])=>{g.fillStyle='#fff';g.beginPath();g.ellipse(x+w/2,y+h/2,w/2,h/2,0,0,7);g.fill();g.stroke();g.fillStyle='#111';g.fillText(SAMPLE[k][0].slice(0,6),x+w/2,y+h/2-12);g.fillText(SAMPLE[k][0].slice(6)||'…',x+w/2,y+h/2+14)});
+ return{src:c.toDataURL('image/jpeg',.85),w:640,h:900,d:B.map(([x,y,w,h,k],i)=>mk([x,y,w,h],k))}}
+function mk(b,k){const s=SAMPLE[k%4];return{id:0,b,o:s[0],r:s[1],t:s[2],e:false,h:false}}
+function renum(p){p.d.forEach((d,i)=>d.id=i+1)}
+/* ---------- tải lên ---------- */
+function addPage(name,src,w,h,d){if(S.pages.some(p=>p.name===name))return;const p={id:S.nid++,name,src,w,h,d:d||[],st:d&&d.length?'done':'pending'};renum(p);S.pages.push(p);
+ S.pages.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}))}
+$('#pick').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{for(const f of e.target.files){const src=await new Promise(r=>{const x=new FileReader;x.onload=()=>r(x.result);x.readAsDataURL(f)});
+ await new Promise(r=>{const i=new Image;i.onload=()=>{addPage(f.name,src,i.naturalWidth,i.naturalHeight);r()};i.onerror=()=>{toast('Không đọc được '+f.name);r()};i.src=src})}e.target.value='';renderUp()};
+$('#demo').onclick=()=>{for(let n=1;n<=3;n++){const x=demoImg(n);addPage('trang-'+(n<10?'0':'')+n+'.jpg',x.src,x.w,x.h,x.d.slice(0,n===1?4:3))}toast('Đã thêm 3 trang mẫu');renderUp()};
+function renderUp(){$('#pl').innerHTML=S.pages.length?S.pages.map(p=>`<div class="pg"><img src="${p.src}" alt=""><div class="n"><div>${esc(p.name)}</div><small>${p.w}×${p.h} · ${p.d.length} thoại</small></div><span class="st ${p.st}">${p.st==='done'?'Đã dịch':'Chờ dịch'}</span><button class="ic" data-x="${p.id}" aria-label="Xóa">${svg('del')}</button></div>`).join(''):'';
+ $$('#pl [data-x]').forEach(b=>b.onclick=()=>{S.pages=S.pages.filter(p=>p.id!=b.dataset.x);S.cur=0;renderUp()})}
+$('#go').onclick=()=>{const todo=S.pages.filter(p=>p.st!=='done');if(!S.pages.length){toast('Hãy thêm ít nhất một trang');return}if(!todo.length){tab('ws');return}
+ const bar=$('#bar');bar.hidden=false;let i=0;$('#go').disabled=true;(function step(){const p=todo[i];if(!p){bar.hidden=true;$('#go').disabled=false;renderUp();toast('Xong (dữ liệu mẫu)');tab('ws');return}
+  if(!p.d.length){const W=p.w,H=p.h;p.d=[[.08,.06,.34,.1],[.55,.25,.34,.09],[.12,.62,.3,.1]].map((r,k)=>mk([r[0]*W|0,r[1]*H|0,r[2]*W|0,r[3]*H|0],k));renum(p)}
+  p.st='done';i++;bar.firstElementChild.style.width=(i/todo.length*100)+'%';renderUp();setTimeout(step,450)})()};
+/* ---------- workspace ---------- */
+function renderWs(){const w=$('#wsb');const p=cur();
+ if(!p){w.innerHTML='<div class="empty"><b>Chưa có trang nào</b>Vào tab Tải lên để thêm ảnh hoặc dùng trang mẫu.</div>';return}
+ w.innerHTML=`<div id="strip">${S.pages.map((q,i)=>`<img src="${q.src}" data-i="${i}" class="${i===S.cur?'on':''}" alt="${esc(q.name)}">`).join('')}</div>
+ <div id="stage"><div id="wrap"><img src="${p.src}" width="${p.w}" height="${p.h}" alt=""><svg id="ov" width="${p.w}" height="${p.h}" viewBox="0 0 ${p.w} ${p.h}"></svg></div><div id="zoom"></div>
+ <div id="tools"><button id="bfit" aria-label="Vừa màn hình">${svg('fit')}</button><button id="b1" aria-label="Kích thước gốc">${svg('one')}</button><button id="btr" class="${S.showTr?'on':''}" aria-label="Xem bản dịch">${svg('tr')}</button><button id="badd" aria-label="Thêm thoại">${svg('add')}</button></div></div>
+ <div id="sheet" class="${S.sheetMin?'min':''}"><div id="sh"><b>Thoại · ${p.d.length}</b><span class="st">${esc(p.name)}</span><button class="ic" id="tg" aria-label="Thu gọn">${svg(S.sheetMin?'up':'dn')}</button></div><div id="list"></div></div>`;
+ $$('#strip img').forEach(i=>i.onclick=()=>{S.cur=+i.dataset.i;S.sel=null;renderWs();fit()});
+ $('#bfit').onclick=fit;$('#b1').onclick=()=>zoomTo(1);$('#btr').onclick=()=>{S.showTr=!S.showTr;$('#btr').classList.toggle('on',S.showTr);drawOv()};
+ $('#badd').onclick=addBox;$('#tg').onclick=()=>{S.sheetMin=!S.sheetMin;renderWs();fit(true)};
+ bindStage();drawOv();drawList();fit()}
+function applyV(){const v=S.v;$('#wrap').style.transform=`translate(${v.x}px,${v.y}px) scale(${v.s})`;$('#zoom').textContent=Math.round(v.s*100)+'%'}
+function fit(keep){const st=$('#stage'),p=cur();if(!st||!p)return;const W=st.clientWidth,H=st.clientHeight;if(!W||!H){requestAnimationFrame(()=>fit(keep));return}
+ const s=Math.min(W/p.w,H/p.h)*.98;S.v={s,x:(W-p.w*s)/2,y:(H-p.h*s)/2};applyV()}
+function zoomAt(f,cx,cy){const v=S.v,ns=Math.max(.1,Math.min(6,v.s*f)),k=ns/v.s;v.x=cx-(cx-v.x)*k;v.y=cy-(cy-v.y)*k;v.s=ns;applyV()}
+function zoomTo(s){const st=$('#stage');zoomAt(s/S.v.s,st.clientWidth/2,st.clientHeight/2)}
+function drawOv(){const p=cur(),ov=$('#ov');if(!ov)return;const fs=Math.max(12,Math.min(p.w/22,34));
+ ov.innerHTML=p.d.filter(d=>!d.h).map(d=>{const[x,y,w,h]=d.b,sel=S.sel===d.id;
+  const rect=S.showTr&&d.t?`<rect class="tr" x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(w,h)/4}"/><foreignObject x="${x+4}" y="${y+2}" width="${w-8}" height="${h-4}"><div xmlns="http://www.w3.org/1999/xhtml" class="tx" style="width:100%;height:100%;font-size:${fs}px">${esc(d.t)}</div></foreignObject>`:'';
+  return`<g>${rect}<rect class="bx${d.e?' ed':''}${sel?' sel':''}" data-id="${d.id}" x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/>${sel?`<circle data-h="${d.id}" cx="${x+w}" cy="${y+h}" r="${Math.max(10,16/S.v.s)}" fill="var(--ac)" stroke="#fff" stroke-width="2"/>`:''}</g>`}).join('')}
+function drawList(){const p=cur(),l=$('#list');if(!l)return;
+ if(!p.d.length){l.innerHTML='<div class="empty"><b>Trang chưa có thoại</b>Bấm dấu + trên ảnh để thêm khung đầu tiên.</div>';return}
+ l.innerHTML=p.d.map((d,i)=>`<div class="dl${S.sel===d.id?' sel':''}${d.e?' ed':''}${d.h?' hid':''}" data-id="${d.id}"><div class="dh"><span class="id">#${d.id}</span>${d.e?'<span>đã chỉnh sửa</span>':''}<span class="sp"></span>
+  <button class="ic" data-a="up" ${i?'':'disabled'} aria-label="Lên">${svg('up')}</button><button class="ic" data-a="dn" ${i<p.d.length-1?'':'disabled'} aria-label="Xuống">${svg('dn')}</button><button class="ic" data-a="hide" aria-label="Ẩn/hiện">${svg('eye')}</button><button class="ic" data-a="del" aria-label="Xóa">${svg('del')}</button></div>
+  <div class="og">${esc(d.o)}${d.r?`<i>${esc(d.r)}</i>`:''}</div><textarea rows="2" data-t="1" placeholder="Bản dịch">${esc(d.t)}</textarea></div>`).join('');
+ $$('#list .dl').forEach(c=>{const d=p.d.find(x=>x.id==c.dataset.id);c.onclick=e=>{if(e.target.closest('button,textarea'))return;sel(d.id)};
+  const ta=c.querySelector('textarea');ta.onfocus=()=>{if(S.sel!==d.id){S.sel=d.id;drawOv();$$('#list .dl').forEach(x=>x.classList.toggle('sel',x===c))}};
+  ta.oninput=()=>{d.t=ta.value;d.e=true;c.classList.add('ed');drawOv()};
+  c.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>act(d,b.dataset.a))})}
+function sel(id){S.sel=id;drawOv();drawList();const c=$(`#list .dl[data-id="${id}"]`);if(c)c.scrollIntoView({block:'nearest',behavior:'smooth'})}
+function act(d,a){const p=cur(),i=p.d.indexOf(d);
+ if(a==='hide')d.h=!d.h;else if(a==='del'){p.d.splice(i,1);if(S.sel===d.id)S.sel=null;toast('Đã xóa thoại')}
+ else{const j=a==='up'?i-1:i+1;[p.d[i],p.d[j]]=[p.d[j],p.d[i]];toast('Đã đổi thứ tự')}
+ const keep=S.sel;renum(p);S.sel=keep&&p.d.find(x=>x===d)?d.id:null;drawOv();drawList();$('#sh b').textContent='Thoại · '+p.d.length}
+function addBox(){const p=cur(),st=$('#stage'),v=S.v,w=Math.min(p.w*.3,260),h=w*.5;
+ const cx=(st.clientWidth/2-v.x)/v.s,cy=(st.clientHeight/2-v.y)/v.s;
+ const d={id:0,b:[Math.max(0,cx-w/2)|0,Math.max(0,cy-h/2)|0,w|0,h|0],o:'(nhập tay)',r:'',t:'',e:true,h:false};p.d.push(d);renum(p);S.sel=d.id;drawOv();drawList();$('#sh b').textContent='Thoại · '+p.d.length;toast('Đã thêm khung mới')}
+/* ---------- cử chỉ ---------- */
+function bindStage(){const st=$('#stage'),P=new Map();let mode=null,start,pd=0,pc;
+ const rc=()=>st.getBoundingClientRect(),img=e=>{const r=rc(),v=S.v;return[(e.clientX-r.left-v.x)/v.s,(e.clientY-r.top-v.y)/v.s]};
+ st.onpointerdown=e=>{if(e.target.closest('#tools'))return;st.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(P.size===2){mode='pinch';const[a,b]=[...P.values()];pd=Math.hypot(a.x-b.x,a.y-b.y);return}
+  const t=e.target,id=t.dataset&&(t.dataset.h||t.dataset.id);start={x:e.clientX,y:e.clientY,v:{...S.v},moved:false,id:id?+id:null};
+  if(t.dataset&&t.dataset.h){mode='rs';start.b=cur().d.find(d=>d.id==id).b.slice()}
+  else if(id&&S.sel===+id){mode='mv';start.b=cur().d.find(d=>d.id==id).b.slice();start.p=img(e)}
+  else mode='pan'};
+ st.onpointermove=e=>{if(!P.has(e.pointerId))return;P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(mode==='pinch'&&P.size>=2){const[a,b]=[...P.values()],d=Math.hypot(a.x-b.x,a.y-b.y),r=rc();if(pd)zoomAt(d/pd,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);pd=d;return}
+  if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dx)+Math.abs(dy)>5)start.moved=true;if(!start.moved)return;
+  if(mode==='pan'){S.v.x=start.v.x+dx;S.v.y=start.v.y+dy;applyV()}
+  else{const d=cur().d.find(x=>x.id===S.sel);if(!d)return;const[px,py]=img(e);
+   if(mode==='mv'){d.b[0]=Math.round(start.b[0]+px-start.p[0]);d.b[1]=Math.round(start.b[1]+py-start.p[1])}
+   else{d.b[2]=Math.max(24,Math.round(px-start.b[0]));d.b[3]=Math.max(24,Math.round(py-start.b[1]))}
+   d.e=true;drawOv()}};
+ const up=e=>{P.delete(e.pointerId);if(mode==='pinch'){if(P.size<2){mode=null;start=null}return}
+  if(start&&!start.moved&&start.id&&mode!=='rs')sel(start.id);else if(start&&!start.moved&&!start.id){S.sel=null;drawOv();drawList()}
+  else if(start&&start.moved&&mode!=='pan')drawList();mode=null;start=null};
+ st.onpointerup=up;st.onpointercancel=up;
+ st.onwheel=e=>{e.preventDefault();const r=rc();zoomAt(e.deltaY<0?1.12:.89,e.clientX-r.left,e.clientY-r.top)}}
+/* ---------- điều hướng / giao diện ---------- */
+function tab(t){S.tab=t;$$('main section').forEach(s=>s.classList.toggle('on',s.id==='t-'+t));$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='ws')renderWs();if(t==='up')renderUp()}
+$$('#nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+function theme(t){S.theme=t;if(t==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=t;$$('#theme button').forEach(b=>b.classList.toggle('on',b.dataset.t===t))}
+$$('#theme button').forEach(b=>b.onclick=()=>theme(b.dataset.t));
+addEventListener('resize',()=>{if(S.tab==='ws')fit()});
+theme('system');tab('up');
+</script>
+</body>
+</html>
